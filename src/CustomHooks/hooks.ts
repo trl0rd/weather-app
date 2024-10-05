@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
-import {
-  WeatherData,
-  UseWeatherDataResult,
-  UseLocalStorageResult,
-} from "../types";
+import { WeatherData, UseLocalStorageResult } from "../types";
+import { useTemperatureUnit } from "../context/TemperatureUnitContext";
 
 export const useLocalStorage = <T>(
   key: string,
@@ -35,19 +32,19 @@ export const useLocalStorage = <T>(
 
 const API_KEY = "e4f09722ec2f293492f3f3a780e740e5";
 
-export const useWeatherData = (
-  lat: number,
-  lon: number
-): UseWeatherDataResult => {
+export const useWeatherData = (lat: number, lon: number) => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { unit } = useTemperatureUnit();
 
   useEffect(() => {
     const fetchWeather = async () => {
       try {
         const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${
+            unit === "C" ? "metric" : "imperial"
+          }`
         );
 
         if (!response.ok) {
@@ -73,7 +70,7 @@ export const useWeatherData = (
     const interval = setInterval(fetchWeather, 600000); // Update every 10 minutes
 
     return () => clearInterval(interval);
-  }, [lat, lon]);
+  }, [lat, lon, API_KEY, unit]);
 
   return { weather, loading, error };
 };
