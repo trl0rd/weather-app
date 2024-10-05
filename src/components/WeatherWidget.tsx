@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  IconButton,
-  Box,
-  Button,
-} from "@mui/material";
+import { Card, CardContent, Typography, IconButton, Box } from "@mui/material";
 import { WbSunny, CloudQueue, Umbrella } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTemperatureUnit } from "../context/TemperatureUnitContext";
